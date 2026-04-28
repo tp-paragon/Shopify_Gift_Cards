@@ -64,7 +64,7 @@ def build_gift_card_sale_rows(order_id: str, processed_line_items: List[str], gi
         if units_sold == 0 or unfulfilled_units > 0:
             print(f"No Units! {line_item_id} {sku} | sold: {units_sold} | unfilfilled: {unfulfilled_units}")
             continue
-        sell_price = Decimal(line_item["discountedPriceSet"]["presentmentMoney"]["amount"])
+        sell_price = Decimal(line_item["discountedUnitPriceAfterAllDiscountsSet"]["presentmentMoney"]["amount"])
         extended_sales_amt = sell_price * units_sold
         ward_row = {
             "store": store,

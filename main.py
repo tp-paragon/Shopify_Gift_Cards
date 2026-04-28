@@ -23,9 +23,7 @@ print(f"{len(orders)} Orders to Process...", flush=True)
 for order in orders:
     order_id, order_num, created_at = order
     processed_line_items = get_processed_line_items(order_id, "processed_sale_line_items")
-    order_gc_rows = build_gift_card_sale_rows(order_id, processed_line_items, gift_card_skus)
-    if order_gc_rows:
-        gift_card_sale_rows.append(order_gc_rows)
+    gift_card_sale_rows.extend(build_gift_card_sale_rows(order_id, processed_line_items, gift_card_skus))
 print(f"{len(gift_card_sale_rows)} Gift Card Rows Created", flush=True)
 
 if gift_card_sale_rows:

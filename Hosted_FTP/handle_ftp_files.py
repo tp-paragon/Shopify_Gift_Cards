@@ -22,4 +22,4 @@ def save_csv_file_on_ftp(file_name: str, file_rows: List[dict], dt_stamp: str) -
     csv_buffer.seek(0)
     ftp.storbinary(f"STOR /Shopify/Backup/{file_name}/{file_name.upper()} {dt_stamp}.csv", csv_buffer)
     ftp.quit()
-    df.to_csv(f"./Output/{file_name.upper()}CSV {dt_stamp}.csv", index=False, header=True)
+    # df.to_csv(f"./Output/{file_name.upper()}.csv", index=False, header=True)
