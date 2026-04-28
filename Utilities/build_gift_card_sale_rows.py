@@ -31,10 +31,11 @@ def get_sale_data(order_id: str) -> dict:
     original_sale_res = execute_api_call(original_sale_query, query_variables)
     return original_sale_res["order"]
 
-def build_gift_card_sale_rows(order_id: str, processed_line_items: List[str], gift_card_skus: set[str]) -> List[dict]:
+def build_gift_card_sale_rows(order_id: str, processed_line_items: List[str], activated_gift_card_lines: List[str], gift_card_skus: set[str]) -> dict:
     transaction_data = get_sale_data(order_id)
     order_number = transaction_data["name"]
     sales_date, sales_time = get_date_time(transaction_data["createdAt"])
+    new_activated_gift_card_lines = []
     gift_card_nums = get_gift_card_nums(transaction_data)
     gc_idx = 0
     shipment_num = order_number + "01"
@@ -45,12 +46,13 @@ def build_gift_card_sale_rows(order_id: str, processed_line_items: List[str], gi
 
     line_items = transaction_data["lineItems"]["nodes"]
     print(f"Order {order_number} Total # of Line Items: {len(line_items)}", flush=True)
-    ward_rows = []
+    gift_card_rows = []
     for line_item in line_items:
         line_item_id = line_item["id"]
         sku = line_item["sku"]
-        if line_item_id in processed_line_items or sku not in gift_card_skus:
+        if line_item_id in processed_line_items or line_item_id in activated_gift_card_lines or sku not in gift_card_skus:
             continue
+        new_activated_gift_card_lines.append(line_item_id)
         if gc_idx < len(gift_card_nums):
             gift_certificate_num = gift_card_nums[gc_idx]
             gc_idx += 1
@@ -96,6 +98,9 @@ def build_gift_card_sale_rows(order_id: str, processed_line_items: List[str], gi
             "associate": "77",
             "sales_type": sales_type
         }
-        ward_rows.append(ward_row)
+        gift_card_rows.append(ward_row)
 
-    return ward_rows
+    return {
+        "gift_card_rows": gift_card_rows,
+        "new_gift_card_lines": new_activated_gift_card_lines
+    }
