@@ -1,0 +1,14 @@
+query orders($query: String!, $cursor: String){
+    orders(first: 100, query: $query, after: $cursor) {
+        nodes {
+            id
+            name
+            createdAt
+            updatedAt
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}

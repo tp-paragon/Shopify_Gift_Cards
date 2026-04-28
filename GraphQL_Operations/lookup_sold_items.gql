@@ -1,0 +1,80 @@
+query order($id: ID!) {
+    order(id: $id) {
+        id
+        name
+        app {
+            id
+            name
+        }
+        retailLocation {
+            id
+            name
+        }
+        createdAt
+        updatedAt
+        lineItems(first: 250) {
+            nodes {
+                id
+                name
+                sku
+                quantity
+                currentQuantity
+                unfulfilledQuantity
+                discountedUnitPriceAfterAllDiscountsSet {
+                    ...moneyFields
+                }
+                taxLines(first: 10) {
+                    priceSet {
+                        ...moneyFields
+                    }
+                    title
+                    ratePercentage
+                }
+                staffMember {
+                    name
+                    id
+                }
+            }
+        }
+        refunds(first: 5) {
+            refundLineItems (first: 25) {
+                nodes {
+                    lineItem {
+                        id
+                    }
+                    quantity
+                    totalTaxSet {
+                        ...moneyFields
+                    }
+                }
+            }
+        }
+        shippingLine {
+            id
+            title
+            isRemoved
+            discountedPriceSet {
+                ...moneyFields
+            }
+            taxLines {
+                priceSet {
+                    ...moneyFields
+                }
+                title
+                ratePercentage
+            }
+        }
+        events(first: 50, sortKey:CREATED_AT, query: "action:comment") {
+            nodes {
+                message
+            }
+        }
+    }
+}
+
+fragment moneyFields on MoneyBag {
+    presentmentMoney {
+        amount
+        currencyCode
+    }
+}

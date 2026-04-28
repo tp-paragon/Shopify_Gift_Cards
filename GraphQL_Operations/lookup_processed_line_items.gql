@@ -1,0 +1,9 @@
+query order($id: ID!, $metafieldNamespace: String, $metafieldKey: String!) {
+    order(id: $id) {
+        id
+        name
+        metafield(namespace: $metafieldNamespace, key: $metafieldKey) {
+            value
+        }
+    }
+}
